@@ -89,8 +89,8 @@
                   <div data-hf-id="hf-ig1q" class="chart-container">
                     <div data-hf-id="hf-82m1" class="chart-grid"></div>
                     <svg data-hf-id="hf-ndow" class="chart-svg" viewBox="0 0 800 340">
-                      <!-- Flat for ~560px, then drops ~600px vertically -->
-                      <path data-hf-id="hf-j7ov" class="stock-line" id="stockLine" d="M -20,60 L 540,60 L 560,60 L 575,400 L 590,800" stroke-dasharray="1600" stroke-dashoffset="1600" />
+                      <!-- Upward trending jagged noise, then drops vertically -->
+                      <path data-hf-id="hf-tbdk" class="stock-line" id="stockLine" d="M -20,180 L 30,160 L 80,190 L 130,140 L 180,160 L 240,110 L 290,130 L 340,90 L 390,120 L 440,70 L 490,90 L 540,40 L 560,40 L 575,400 L 590,800" stroke-dasharray="3000" stroke-dashoffset="3000" />
                     </svg>
                   </div>
                   <div data-hf-id="hf-o00g" class="loss-counter-wrapper">
@@ -130,12 +130,13 @@
     // FADE IN CHART SCENE (1.5s)
     tl.to("#chartStage", { opacity: 1, duration: 0.8, ease: "power2.out" }, 1.5);
     
-    // DRAW FLAT CHART LINE (1.5s - 4.5s)
-    tl.to("#stockLine", { strokeDashoffset: 1020, duration: 3.0, ease: "none" }, 1.5);
+    // DRAW JAGGED CHART LINE (1.5s - 4.5s)
+    // Offset from 3000 to 2350 draws the first ~650px (the jagged section)
+    tl.to("#stockLine", { strokeDashoffset: 2350, duration: 3.0, ease: "none" }, 1.5);
     
     // THE CRASH (4.5s)
     tl.to("#stockLine", { stroke: "#ff3366", filter: "drop-shadow(0 0 16px rgba(255,51,102,0.95))", duration: 0.1 }, 4.5);
-    tl.to("#stockLine", { strokeDashoffset: 200, duration: 0.9, ease: "power4.in" }, 4.5);
+    tl.to("#stockLine", { strokeDashoffset: 1550, duration: 0.9, ease: "power4.in" }, 4.5);
     
     // SCREEN FLASHES RED & LOSS COUNTER STARTS (4.5s)
     tl.to("#chartFlash", { opacity: 1, duration: 0.1 }, 4.5);
