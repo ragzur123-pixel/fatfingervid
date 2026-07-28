@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>15s Macintosh CRT Stock Order Swap Visual - HyperFrames</title>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+    @font-face { font-family: 'Courier New'; src: local('Courier New'); }
+    @font-face { font-family: 'Lucida Console'; src: local('Lucida Console'); }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { margin: 0; background: #000; color: #fff; font-family: 'Courier New', 'Lucida Console', monospace; overflow: hidden; -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
+    #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; user-select: none; transform: translateZ(0); }
+    #bg { position: absolute; inset: 0; background: #000; display: flex; align-items: center; justify-content: center; perspective: 1400px; }
+    .mac-3d-ground-layer { position: absolute; width: 3200px; height: 2000px; bottom: -320px; background: radial-gradient(ellipse at 50% 35%, #1e293b 0%, #0f172a 38%, #020617 65%, #000000 90%); transform: rotateX(76deg); transform-origin: bottom center; -webkit-mask-image: radial-gradient(ellipse at 50% 40%, rgba(0,0,0,1) 30%, rgba(0,0,0,0.7) 55%, transparent 80%); mask-image: radial-gradient(ellipse at 50% 40%, rgba(0,0,0,1) 30%, rgba(0,0,0,0.7) 55%, transparent 80%); z-index: 1; pointer-events: none; }
+    .mac-ground-shadow { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 900px; height: 350px; background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.05) 50%, transparent 80%); filter: blur(12px); pointer-events: none; }
+    .mac-3d-stage { position: relative; width: 1920px; height: 1080px; display: flex; align-items: center; justify-content: center; transform-style: preserve-3d; transform-origin: center center; z-index: 10; will-change: transform; }
+    .mac-studio-wrapper { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; transform-style: preserve-3d; z-index: 10; }
+    .mac-square-chassis { position: relative; width: 1160px; height: 980px; background: linear-gradient(180deg, #007a87 0%, #005a66 48%, #e2e8f0 76%, #cbd5e1 100%); border: 14px solid rgba(255, 255, 255, 0.45); border-radius: 56px 56px 24px 24px; box-shadow: 0 40px 100px rgba(0,0,0,0.95), inset 0 6px 18px rgba(255,255,255,0.8), inset 0 -14px 32px rgba(0,0,0,0.55); display: flex; flex-direction: column; align-items: center; padding: 24px 32px 18px; overflow: hidden; transform-style: preserve-3d; z-index: 10; }
+    .mac-base-foot { position: relative; width: 960px; height: 36px; background: linear-gradient(180deg, #94a3b8 0%, #475569 50%, #1e293b 100%); border: 2px solid #cbd5e1; border-radius: 0 0 20px 20px; box-shadow: 0 12px 24px rgba(0,0,0,0.9), inset 0 2px 4px rgba(255,255,255,0.6); margin-top: -4px; z-index: 12; }
+    .mac-ao-line { position: relative; width: 980px; height: 10px; background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 100%); margin-top: -4px; filter: blur(3px); z-index: 13; }
+    .imac-handle { position: absolute; top: 10px; width: 220px; height: 20px; background: rgba(255,255,255,0.35); border-radius: 10px; border: 2px solid rgba(255,255,255,0.65); }
+    .mac-crt-tube { position: relative; width: 100%; height: 760px; background: #000; border: 36px solid #0b1220; border-radius: 96px; box-shadow: inset 0 0 140px rgba(0,0,0,0.99), 0 0 45px rgba(0,0,0,0.95); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .mac-expanded-chin { position: relative; width: 100%; height: 110px; display: flex; align-items: center; justify-content: center; margin-top: 12px; }
+    .mac-centered-apple-badge { display: flex; align-items: center; justify-content: center; }
+    .official-silver-apple-icon { width: 60px; height: 72px; fill: url(#silverGradient); filter: drop-shadow(0 3px 8px rgba(0,0,0,0.65)); }
+    .crt-glass-glare { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.04) 28%, transparent 50%, rgba(255,255,255,0.02) 72%, rgba(255,255,255,0.08) 100%); z-index: 42; pointer-events: none; }
+    .crt-scanlines { position: absolute; inset: 0; background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%); background-size: 100% 2px; z-index: 40; opacity: 0.25; pointer-events: none; }
+    .vhs-timestamp { position: absolute; bottom: 28px; left: 36px; font-family: 'Courier New', 'Lucida Console', monospace; font-size: 24px; font-weight: 700; color: #00ff66; text-shadow: 0 0 12px rgba(0,255,102,0.9), 2px 2px 0 #000; z-index: 60; letter-spacing: 2px; pointer-events: none; }
+    .clip { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 10; }
+    .minimal-stage { position: relative; width: 980px; display: flex; flex-direction: column; align-items: center; gap: 32px; transform-origin: center center; }
+    .counters-group { position: relative; width: 100%; display: flex; flex-direction: column; gap: 24px; perspective: 1200px; }
+    
+    /* COUNTER FIELD CONTAINER BOX */
+    .counter-box { position: relative; background: #080d14; border: 2.5px solid rgba(255, 255, 255, 0.2); border-radius: 12px; padding: 22px 32px; display: flex; align-items: center; justify-content: space-between; height: 150px; box-shadow: 0 20px 48px rgba(0,0,0,0.95); transform-style: preserve-3d; }
+    .counter-label { font-family: 'Courier New', 'Lucida Console', monospace; font-size: 26px; font-weight: 700; color: #94a3b8; letter-spacing: 3px; text-transform: uppercase; text-shadow: 0 0 6px rgba(148,163,184,0.45); }
+    
+    /* VALUE WRAPPER - RED BLOOM POST-SWAP */
+    .counter-value-wrapper { position: relative; display: flex; align-items: center; gap: 8px; }
+
+    #valQty { font-family: 'Courier New', 'Lucida Console', monospace; font-size: 96px; font-weight: 700; color: #ff3366; letter-spacing: -1.5px; display: inline-block; opacity: 1; text-shadow: 0 0 20px rgba(255, 51, 102, 0.95), 0 0 40px rgba(255, 51, 102, 0.5); transform-origin: center center; }
+    #valPrice { font-family: 'Courier New', 'Lucida Console', monospace; font-size: 96px; font-weight: 700; color: #ff3366; letter-spacing: -1.5px; display: inline-block; opacity: 1; text-shadow: 0 0 20px rgba(255, 51, 102, 0.95), 0 0 40px rgba(255, 51, 102, 0.5); transform-origin: center center; }
+    .typing-caret-l { display: inline-block; width: 6px; height: 82px; background: #ffffff; opacity: 0; border-radius: 1px; box-shadow: 0 0 0 1.5px #000000, 0 0 10px #ffffff; }
+    
+    /* CONFIRM ORDER BUTTON */
+    .confirm-container { position: relative; width: 680px; margin: 0 auto; }
+    .retro-confirm-btn { width: 100%; height: 80px; background: linear-gradient(180deg, #32d74b 0%, #1db937 100%); border: 3.5px outset #ffffff; border-right-color: #0d5c1a; border-bottom-color: #0d5c1a; border-radius: 8px; color: #ffffff; font-family: 'Courier New', 'Lucida Console', monospace; font-size: 28px; font-weight: 700; letter-spacing: 3px; text-shadow: 2px 2px 2px #000000; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: 0 12px 28px rgba(0,0,0,0.7), 0 0 16px rgba(50,215,75,0.45); transition: border-color 0.15s; }
+    .retro-confirm-btn.clicked { border: 3.5px inset #0d5c1a; background: linear-gradient(180deg, #1db937 0%, #17a02e 100%); }
+    #mouseCursor { position: absolute; top: 0; left: 0; width: 44px; height: 52px; z-index: 35; pointer-events: none; filter: drop-shadow(2px 3px 6px rgba(0,0,0,0.9)); }
+    .click-ripple { position: absolute; width: 56px; height: 56px; border: 4px solid #00ff44; border-radius: 50%; z-index: 34; transform: translate(-50%, -50%) scale(0.2); opacity: 0; }
+    
+    /* CHART SCENE */
+    .fixed-hud-header { position: absolute; left: 220px; top: 965px; transform: translate(-50%, -50%) scale(0.6); transform-origin: center; font-size: 42px; font-weight: 700; color: #cbd5e1; letter-spacing: 6px; text-shadow: 0 0 12px rgba(203,213,225,0.6); opacity: 0; z-index: 9999; pointer-events: none; }
+    .chart-stage { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; opacity: 0; pointer-events: none; z-index: 20; }
+    .chart-header { font-size: 42px; font-weight: 700; color: #cbd5e1; letter-spacing: 6px; text-shadow: 0 0 12px rgba(203,213,225,0.6); }
+    .chart-container { position: absolute; left: 80px; top: 120px; width: 800px; height: 340px; }
+    .chart-grid { position: absolute; left: -5000px; top: -5000px; width: 10000px; height: 10000px; background-image: linear-gradient(rgba(0,255,102,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,102,0.1) 1px, transparent 1px); background-size: 40px 40px; z-index: 1; }
+    .chart-svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 10; overflow: visible; }
+    .stock-line { fill: none; stroke: #00ff66; stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; filter: drop-shadow(0 0 8px rgba(0,255,102,0.8)); }
+    .loss-counter-wrapper { position: absolute; left: 300px; width: 240px; top: 40px; display: flex; flex-direction: column; align-items: flex-end; text-align: right; gap: 2px; z-index: 50; opacity: 0; }
+    .loss-counter-label { font-size: 14px; color: #ff3366; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 6px rgba(255,51,102,0.7); }
+    .loss-counter-value { font-size: 24px; font-weight: 700; color: #ff3366; text-shadow: 0 0 8px rgba(255,51,102,0.9), 0 0 16px rgba(255,51,102,0.5); font-variant-numeric: tabular-nums; letter-spacing: -1px; }
+    .chart-red-flash { position: absolute; inset: 0; background: rgba(255,51,102,0.25); opacity: 0; z-index: 100; pointer-events: none; mix-blend-mode: screen; }
+  </style>
+</head>
+<body>
+  <svg data-hf-id="hf-qfii" width="0" height="0" style="position:absolute;"><defs data-hf-id="hf-mh0t"><lineargradient data-hf-id="hf-x8r2" id="silverGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop data-hf-id="hf-7b67" offset="0%" stop-color="#ffffff" /><stop data-hf-id="hf-oqaw" offset="25%" stop-color="#e2e8f0" /><stop data-hf-id="hf-5jtt" offset="48%" stop-color="#475569" /><stop data-hf-id="hf-v9c4" offset="68%" stop-color="#94a3b8" /><stop data-hf-id="hf-a2d3" offset="88%" stop-color="#e2e8f0" /><stop data-hf-id="hf-bwui" offset="100%" stop-color="#ffffff" /></lineargradient></defs></svg>
+  <div data-hf-id="hf-goxw" id="root" data-composition-id="stock-order-crash" data-start="0" data-width="1920" data-height="1080" data-duration="15">
+    <div data-hf-id="hf-2xc0" id="bg">
+      <div data-hf-id="hf-3mm5" class="mac-3d-ground-layer"><div data-hf-id="hf-k7ik" class="mac-ground-shadow"></div></div>
+      <div data-hf-id="hf-hewe" class="mac-3d-stage" id="mac3DStage">
+        <div data-hf-id="hf-rgfm" class="mac-studio-wrapper">
+          <div data-hf-id="hf-rkgo" class="mac-square-chassis">
+            <div data-hf-id="hf-ap45" class="imac-handle"></div>
+            <div data-hf-id="hf-0jnq" class="mac-crt-tube">
+              <div data-hf-id="hf-bfjc" class="crt-glass-glare"></div>
+              <div data-hf-id="hf-hh4q" class="crt-scanlines"></div>
+              <section data-hf-id="hf-s2og" id="order-clip" class="clip" data-start="0" data-duration="15" data-track-index="1" data-media-start="0">
+                <div data-hf-id="hf-2x4z" class="minimal-stage" id="minimalStage">
+                  <div data-hf-id="hf-2bh9" class="counters-group" id="countersGroup">
+                    <div data-hf-id="hf-168v" class="counter-box" id="boxQty" style="border-color: #ff3366; background-color: #1f080e; box-shadow: 0 0 35px rgba(255,51,102,0.65), 0 20px 48px rgba(0,0,0,0.95);"><span data-hf-id="hf-3zkv" class="counter-label">QUANTITY</span><div data-hf-id="hf-89rs" class="counter-value-wrapper" id="wrapQty"><span data-hf-id="hf-vki5" id="valQty">610,000</span></div></div>
+                    <div data-hf-id="hf-w3cc" class="counter-box" id="boxPrice" style="border-color: #ff3366; background-color: #1f080e; box-shadow: 0 0 35px rgba(255,51,102,0.65), 0 20px 48px rgba(0,0,0,0.95);"><span data-hf-id="hf-g3ko" class="counter-label">LIMIT PRICE</span><div data-hf-id="hf-zoz7" class="counter-value-wrapper" id="wrapPrice"><span data-hf-id="hf-6ymq" id="valPrice">1¥</span></div></div>
+                  </div>
+                  <div data-hf-id="hf-bzpd" class="confirm-container" id="confirmContainer"><button data-hf-id="hf-n823" class="retro-confirm-btn clicked" id="btnConfirm">✔ CONFIRM ORDER</button></div>
+                </div>
+                <div data-hf-id="hf-qj51" class="click-ripple" id="clickRipple"></div>
+                <div data-hf-id="hf-8lu0" id="mouseCursor"><svg data-hf-id="hf-xlqh" width="44" height="52" viewBox="0 0 32 38" fill="none"><path data-hf-id="hf-uu4v" d="M0 0 L0 32 L8 24 L14 36 L19 33 L13 22 L23 22 Z" fill="#ffffff" stroke="#000000" stroke-width="2.2" stroke-linejoin="miter" /></svg></div>
+                <div data-hf-id="hf-skeh" class="chart-stage" id="chartStage">
+                  <div data-hf-id="hf-vcuh" class="chart-header">J-COM CO. [9420]</div>
+                  <div data-hf-id="hf-ig1q" class="chart-container">
+                    <div data-hf-id="hf-82m1" class="chart-grid"></div>
+                    <svg data-hf-id="hf-ndow" class="chart-svg" viewBox="0 0 800 340">
+                      <!-- Upward trending, erratic chaotic noise -->
+                      <path data-hf-id="hf-ntne" class="stock-line" id="stockLineNoise" d="M -20,180 L -5,140 L 10,190 L 30,50 L 45,120 L 55,100 L 70,220 L 85,190 L 100,240 L 120,60 L 135,110 L 150,90 L 165,150 L 180,180 L 200,30 L 215,80 L 230,70 L 245,130 L 260,250 L 280,210 L 295,240 L 310,160 L 325,180 L 345,100 L 360,60 L 375,190 L 390,140 L 410,20 L 425,70 L 440,50 L 455,140 L 470,110 L 490,40 L 505,80 L 520,30 L 535,50 L 550,20 L 560,40" stroke-dasharray="2360" stroke-dashoffset="2360" />
+                      <!-- Vertical crash -->
+                      <path data-hf-id="hf-gdqs" class="stock-line" id="stockLineCrash" d="M 560,40 L 575,400 L 590,800" stroke-dasharray="762" stroke-dashoffset="762" />
+                    </svg>
+                    <div data-hf-id="hf-o00g" class="loss-counter-wrapper">
+                      <div data-hf-id="hf-cbbe" class="loss-counter-label" id="lossLabel">UNREALIZED LOSS</div>
+                      <div data-hf-id="hf-jzg4" class="loss-counter-value" id="lossValue"></div>
+                    </div>
+                  </div>
+                </div>
+                <div data-hf-id="hf-r517" class="chart-red-flash" id="chartFlash"></div>
+              </section>
+            </div>
+            <div data-hf-id="hf-0y0y" class="mac-expanded-chin"><div data-hf-id="hf-tk83" class="mac-centered-apple-badge"><svg data-hf-id="hf-64d5" class="official-silver-apple-icon" viewBox="0 0 384 512"><path data-hf-id="hf-lzp9" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" /></svg></div></div>
+          </div>
+          <div data-hf-id="hf-nqru" class="mac-base-foot"></div>
+          <div data-hf-id="hf-m8al" class="mac-ao-line"></div>
+        </div>
+      </div>
+    </div>
+    <div data-hf-id="hf-rzm6" class="vhs-timestamp"></div>
+    <div data-hf-id="hf-pczf" class="fixed-hud-header" id="fixedHudHeader">J-COM CO. [9420]</div>
+  </div>
+
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+
+    tl.set(".chart-header", { x: -93, y: -23, data: "hf-hold" }, 0);
+
+    // Set initial stationary state (same as end of previous timeline)
+    gsap.set(".mac-3d-ground-layer", { opacity: 1 });
+    gsap.set("#mac3DStage", { scale: 0.68, rotateX: 9, rotateY: 0, y: -35, opacity: 1 });
+    gsap.set(".vhs-timestamp", { x: 0, y: 0, scale: 1, innerText: "REC ● DEC 08 2005 - 09:27:04 JST" });
+    gsap.set("#mouseCursor", { x: 490, y: 520, opacity: 1 });
+
+    // CRT TV TURN OFF EFFECT (0.5s - 1.0s)
+    tl.to("#minimalStage, #mouseCursor", { scaleY: 0.005, filter: "brightness(3)", duration: 0.15, ease: "power4.in" }, 0.5);
+    tl.to("#minimalStage, #mouseCursor", { scaleX: 0, opacity: 0, duration: 0.2, ease: "power4.in" }, 0.65);
+
+    // FADE IN CHART SCENE (1.5s)
+    tl.to("#chartStage", { opacity: 1, duration: 0.8, ease: "power2.out" }, 1.5);
+
+    // ZOOM INTO MONITOR / CENTER THE TIP (1.5s - 4.5s)
+    tl.to("#mac3DStage", { scale: 2.5, rotateX: 0, x: -240, y: 550, duration: 3.0, ease: "power2.inOut" }, 1.5);
+    tl.to(".mac-3d-ground-layer, .crt-glass-glare, .crt-scanlines, .vhs-timestamp", { opacity: 0, duration: 1.5, ease: "power2.in" }, 1.5);
+
+    // ANIMATE 3D HEADER TO EXACT SCREEN COORDINATES
+    tl.to(".chart-header", { x: -200, y: -50, scale: 0.24, duration: 3.0, ease: "power2.inOut" }, 1.5);
+
+    // DRAW JAGGED CHART LINE (1.5s - 4.5s)
+    tl.to("#stockLineNoise", { strokeDashoffset: 0, duration: 3.0, ease: "none" }, 1.5);
+
+    // THE CRASH (4.5s)
+    tl.to("#stockLineNoise, #stockLineCrash", { stroke: "#ff3366", filter: "drop-shadow(0 0 16px rgba(255,51,102,0.95))", duration: 0.1 }, 4.5);
+    tl.to("#stockLineCrash", { strokeDashoffset: 0, duration: 0.9, ease: "power4.in" }, 4.5);
+
+    // PAN CAMERA DOWN WITH CRASH (4.5s - 5.4s)
+    tl.to(".chart-container", { y: -760, duration: 0.9, ease: "power4.in" }, 4.5);
+
+    // LOSS COUNTER TRACKS THE DROPPING LINE (4.5s - 5.4s)
+    tl.to(".loss-counter-wrapper", { opacity: 1, duration: 0.1 }, 4.5);
+    tl.to(".loss-counter-wrapper", { x: 30, y: 760, duration: 0.9, ease: "power4.in" }, 4.5);
+
+    // SEAMLESS HUD SWAP (4.5s)
+    tl.set(".chart-header", { opacity: 0 }, 4.5);
+    tl.set("#fixedHudHeader", { opacity: 1 }, 4.5);
+
+    // SCREEN FLASHES RED (4.5s)
+    tl.to("#chartFlash", { opacity: 1, duration: 0.1 }, 4.5);
+    tl.to("#chartFlash", { opacity: 0, duration: 0.8, ease: "power2.out" }, 4.6);
+
+    const lossObj = { val: 0 };
+    tl.to(lossObj, {
+      val: 40700000000,
+      duration: 6.5,
+      ease: "power2.inOut",
+      onUpdate: function() {
+        document.getElementById("lossValue").innerText = "-¥" + Math.floor(lossObj.val).toLocaleString("en-US");
+      }
+    }, 4.5);
+
+    // MASSIVE ZOOM OUT TO REVEAL FULL DROP (11.0s - 14.0s)
+    tl.to("#chartStage", { scale: 0.35, duration: 3.0, ease: "power3.inOut" }, 11.0);
+    tl.to(".chart-container", { y: -200, duration: 3.0, ease: "power3.inOut" }, 11.0);
+
+    tl.to({}, { duration: 1.0 }, 14.0); // Pads out to 15s total
+
+    tl.to(".chart-header", { keyframes: { "0%": { x: -93, y: -23 }, "3.4%": { x: -103.973, y: -22.785 }, "5.6%": { x: -115.548, y: -21.966 }, "5.8%": { x: -134.497, y: -20.141 }, "6.5%": { x: -163.852, y: -17.161, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "7.4%": { x: -201.099, y: -13.958, ease: "custom(M0,0 C0.333,0.333 0.667,1 1,1)" }, "7.6%": { x: -241.906, y: -11.568 }, "8.2%": { x: -287.094, y: -10.994, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "8.5%": { x: -335.265, y: -12.568 }, "8.6%": { x: -387.053, y: -16.246 }, "9.7%": { x: -442.465, y: -21.78 }, "9.8%": { x: -494.323, y: -28.573 }, "10%": { x: -544.049, y: -37.316 }, "10.7%": { x: -596.393, y: -49.087, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "10.8%": { x: -650.319, y: -63.608 }, "11.3%": { x: -712.66, y: -81.89, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "11.9%": { x: -784.022, y: -103.18, ease: "custom(M0,0 C0.333,0.333 0.667,1 1,1)" }, "12%": { x: -862.259, y: -125.955 }, "12.8%": { x: -942.589, y: -148.472, ease: "custom(M0,0 C0.333,0.333 0.667,1 1,1)" }, "13.1%": { x: -1017.02, y: -168.511 }, "13.2%": { x: -1083.788, y: -185.708 }, "13.4%": { x: -1154.011, y: -203.241 }, "14.2%": { x: -1228.905, y: -221.648 }, "14.3%": { x: -1302.899, y: -239.549 }, "14.5%": { x: -1374.288, y: -256.388 }, "15.1%": { x: -1443.384, y: -272.197, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "15.4%": { x: -1502.286, y: -285.112 }, "15.5%": { x: -1549.188, y: -294.73 }, "16%": { x: -1589.535, y: -301.739, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "16.3%": { x: -1631.357, y: -307.322 }, "16.4%": { x: -1683.959, y: -312.761 }, "19.1%": { x: -1747.367, y: -318.383 }, "19.7%": { x: -1810.804, y: -323.443, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "20.2%": { x: -1863.069, y: -327.165, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "20.6%": { x: -1900.049, y: -329.505 }, "20.7%": { x: -1922.82, y: -330.65 }, "20.9%": { x: -1935.66, y: -330.634 }, "21.1%": { x: -1939.442, y: -329.034 }, "21.6%": { x: -1935.318, y: -325.817, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "21.8%": { x: -1921.131, y: -321.096 }, "22.1%": { x: -1897.469, y: -315.511 }, "22.2%": { x: -1865.16, y: -309.453 }, "22.8%": { x: -1828.884, y: -303.852, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "23%": { x: -1796.216, y: -300.052 }, "23.3%": { x: -1771.08, y: -298.926 }, "24.2%": { x: -184, y: 45, ease: "custom(M0,0 C0.333,0 0.667,0.667 1,1)" }, "25.6%": { x: -1736.964, y: -301.65, ease: "custom(M0,0 C0.333,0 0.667,0.667 1,1)" }, "27%": { x: -1725.532, y: -303.855, ease: "custom(M0,0 C0.333,0.333 0.667,1 1,1)" }, "29.1%": { x: -1722.089, y: -307.297, ease: "custom(M0,0 C0.333,0.333 0.667,1 1,1)" }, "29.3%": { x: -1729.64, y: -313.081 }, "30.1%": { x: -1749.085, y: -322.368, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "31.5%": { x: -1776.5, y: -334.004 }, "31.6%": { x: -1808.209, y: -346.706 }, "32.2%": { x: -1842.281, y: -359.612, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "32.5%": { x: -1877.647, y: -372.124 }, "33.3%": { x: -1913.424, y: -383.88 }, "33.4%": { x: -1947.446, y: -394.437 }, "33.6%": { x: -1981.877, y: -404.375 }, "34.6%": { x: -2018.455, y: -414.442, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "34.7%": { x: -2053.373, y: -423.927 }, "35.7%": { x: -2083.215, y: -432.68 }, "36.4%": { x: -2104.205, y: -441.676, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "37.5%": { x: -2113.93, y: -451.655, ease: "custom(M0,0 C0.333,0.333 0.667,1 1,1)" }, "39%": { x: -2114.645, y: -463.197, ease: "custom(M0,0 C0.333,0 0.667,0.667 1,1)" }, "42.4%": { x: -2109.946, y: -474.127 }, "42.5%": { x: -2108.247, y: -481.753 }, "46.5%": { x: -2115.287, y: -485.329 }, "47.6%": { x: -2132.379, y: -486.083, ease: "custom(M0,0 C0.333,0.333 0.667,1 1,1)" }, "52.1%": { x: -2156.37, y: -484.427 }, "57.6%": { x: -2181.118, y: -480.491 }, "57.8%": { x: -2205.585, y: -472.859 }, "60.7%": { x: -2229.444, y: -461.718 }, "61.1%": { x: -2249.895, y: -448.141, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "61.8%": { x: -2264.393, y: -432.599, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "62.1%": { x: -2271.341, y: -413.963 }, "63.3%": { x: -2269.734, y: -392.094 }, "64%": { x: -2261.06, y: -369.273, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "65.2%": { x: -2246.801, y: -349.162, ease: "custom(M0,0 C0.333,0 0.667,0.667 1,1)" }, "65.8%": { x: -2230.389, y: -333.807, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "66%": { x: -2213.869, y: -323.232 }, "66.3%": { x: -2197.08, y: -315.445 }, "66.4%": { x: -2176.376, y: -308.405 }, "66.6%": { x: -2147.681, y: -300.463 }, "67%": { x: -2110.714, y: -291.302 }, "67.5%": { x: -2072.058, y: -282.648, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "67.6%": { x: -2036.983, y: -276.003 }, "67.8%": { x: -2004.04, y: -271.325 }, "68.1%": { x: -1970.496, y: -267.807, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "68.3%": { x: -1936.608, y: -265.084 }, "68.4%": { x: -1904.145, y: -262.928 }, "68.6%": { x: -1873.228, y: -261.28 }, "68.7%": { x: -1838.097, y: -259.817 }, "68.8%": { x: -1791.519, y: -257.981 }, "69.1%": { x: -1729.252, y: -255.431 }, "69.7%": { x: -1659.793, y: -252.26, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "69.8%": { x: -1594.883, y: -248.685 }, "70%": { x: -1534.688, y: -244.694 }, "70.3%": { x: -1476.198, y: -240.538 }, "70.6%": { x: -1420.576, y: -237.043 }, "70.8%": { x: -1368.244, y: -234.627 }, "70.9%": { x: -1315.999, y: -233.01 }, "71.4%": { x: -1260.842, y: -231.635, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "71.8%": { x: -1208.653, y: -230.097 }, "72%": { x: -1167.219, y: -228.077 }, "72.1%": { x: -1135.489, y: -225.157 }, "72.5%": { x: -1108.033, y: -220.888 }, "73%": { x: -1081.837, y: -215.447, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "73.1%": { x: -1056.728, y: -208.889 }, "74.2%": { x: -1032.603, y: -200.804 }, "75.5%": { x: -1011.178, y: -191.17 }, "75.7%": { x: -992.639, y: -179.885 }, "76.4%": { x: -974.987, y: -166.289, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "77.9%": { x: -957.782, y: -151.026, ease: "custom(M0,0 C0.333,0.333 0.667,1 1,1)" }, "78.2%": { x: -936.405, y: -132.97 }, "78.7%": { x: -908.295, y: -112.31, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "78.8%": { x: -868.428, y: -88.405 }, "79.8%": { x: -818.179, y: -62.966, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "80%": { x: -764.472, y: -39.599 }, "80.9%": { x: -713.286, y: -20.806, ease: "custom(M0,0 C0.333,0 0.667,0.667 1,1)" }, "81%": { x: -668.505, y: -6.746 }, "81.2%": { x: -627.067, y: 3.732 }, "82.1%": { x: -583.235, y: 13.13, ease: "custom(M0,0 C0.333,0 0.667,0.667 1,1)" }, "82.2%": { x: -540.099, y: 20.905 }, "82.8%": { x: -498.776, y: 27.059, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "83.3%": { x: -462.755, y: 31.383, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "83.4%": { x: -431.63, y: 34.234 }, "84.3%": { x: -400.52, y: 36.254, ease: "custom(M0,0 C0.333,0.333 0.667,1 1,1)" }, "84.5%": { x: -368.729, y: 37.171 }, "85.1%": { x: -334.448, y: 36.329, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "85.5%": { x: -300.27, y: 33.551 }, "85.7%": { x: -268.006, y: 29.333 }, "86.6%": { x: -237.089, y: 24.777, ease: "custom(M0,0 C0.333,0 0.667,0.667 1,1)" }, "86.7%": { x: -208.151, y: 20.228 }, "87.6%": { x: -180.755, y: 15.261, ease: "custom(M0,0 C0.333,0.333 0.667,1 1,1)" }, "89.1%": { x: -154.188, y: 8.989 }, "91%": { x: -130.339, y: 2.599 }, "91.5%": { x: -109.091, y: -2.191, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "92.2%": { x: -91.992, y: -4.894, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "92.7%": { x: -80.657, y: -7.197, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "93.6%": { x: -76.259, y: -10.662, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "93.7%": { x: -77.744, y: -16.026 }, "95.7%": { x: -82.322, y: -21.612 }, "96%": { x: -86.592, y: -25.746 }, "100%": { x: -91, y: -29 }, easeEach: "none" }, duration: 4.651 }, 2.967);
+
+    window.__timelines["stock-order-crash"] = tl;
+  </script>
+</body>
+</html>
