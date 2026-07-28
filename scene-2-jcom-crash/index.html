@@ -60,11 +60,6 @@
     .loss-counter-label { font-size: 26px; color: #ff3366; letter-spacing: 5px; text-transform: uppercase; text-shadow: 0 0 12px rgba(255,51,102,0.7); opacity: 0; }
     .loss-counter-value { font-size: 110px; font-weight: 700; color: #ff3366; text-shadow: 0 0 18px rgba(255,51,102,0.9), 0 0 35px rgba(255,51,102,0.5); font-variant-numeric: tabular-nums; letter-spacing: -2px; }
     .chart-red-flash { position: absolute; inset: 0; background: rgba(255,51,102,0.25); opacity: 0; z-index: 100; pointer-events: none; mix-blend-mode: screen; }
-    
-    /* TERMINAL WIPE */
-    .terminal-wipe { position: absolute; top: 80px; left: 80px; font-size: 32px; font-weight: 700; color: #00ff66; z-index: 150; text-shadow: 0 0 12px rgba(0,255,102,0.9); display: none; }
-    .term-caret { display: inline-block; width: 18px; height: 32px; background: #00ff66; vertical-align: bottom; margin-left: 4px; box-shadow: 0 0 8px #00ff66; animation: blink 0.8s step-end infinite; }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
   </style>
 </head>
 <body>
@@ -80,7 +75,6 @@
               <div data-hf-id="hf-bfjc" class="crt-glass-glare"></div>
               <div data-hf-id="hf-hh4q" class="crt-scanlines"></div>
               <section data-hf-id="hf-s2og" id="order-clip" class="clip" data-start="0" data-duration="15" data-track-index="1" data-media-start="0">
-                <div data-hf-id="hf-mvx3" class="terminal-wipe" id="terminalWipe"><span data-hf-id="hf-z2j9" id="termText"></span><span data-hf-id="hf-adct" class="term-caret"></span></div>
                 <div data-hf-id="hf-2x4z" class="minimal-stage" id="minimalStage">
                   <div data-hf-id="hf-2bh9" class="counters-group" id="countersGroup">
                     <div data-hf-id="hf-168v" class="counter-box" id="boxQty" style="border-color: #ff3366; background-color: #1f080e; box-shadow: 0 0 35px rgba(255,51,102,0.65), 0 20px 48px rgba(0,0,0,0.95);"><span data-hf-id="hf-3zkv" class="counter-label">QUANTITY</span><div data-hf-id="hf-89rs" class="counter-value-wrapper" id="wrapQty"><span data-hf-id="hf-vki5" id="valQty">610,000</span></div></div>
@@ -127,32 +121,26 @@
     gsap.set(".vhs-timestamp", { x: 0, y: 0, scale: 1, innerText: "REC ● DEC 08 2005 - 09:27:04 JST" });
     gsap.set("#mouseCursor", { x: 490, y: 520, opacity: 1 });
 
-    // BLACKOUT INITIAL SCENE (0.5s)
-    tl.to("#minimalStage, #mouseCursor", { opacity: 0, duration: 0 }, 0.5);
-
-    // TERMINAL COMMAND SEQUENCE (0.5s - 1.8s)
-    tl.set("#terminalWipe", { display: "block" }, 0.5);
-    const cmd = "> CLEAR";
-    for (let i = 1; i <= cmd.length; i++) {
-      tl.set("#termText", { innerText: cmd.substring(0, i) }, 0.5 + (i * 0.15));
-    }
-    // Terminal hides itself after execution
-    tl.to("#terminalWipe", { opacity: 0, duration: 0 }, 1.8);
+    // CRT TV TURN OFF EFFECT (0.5s - 1.0s)
+    // Vertical squash into a line
+    tl.to("#minimalStage, #mouseCursor", { scaleY: 0.005, filter: "brightness(3)", duration: 0.15, ease: "power4.in" }, 0.5);
+    // Horizontal collapse to dot, then disappear
+    tl.to("#minimalStage, #mouseCursor", { scaleX: 0, opacity: 0, duration: 0.2, ease: "power4.in" }, 0.65);
     
-    // FADE IN CHART SCENE (2.5s)
-    tl.to("#chartStage", { opacity: 1, duration: 0.8, ease: "power2.out" }, 2.5);
+    // FADE IN CHART SCENE (1.5s)
+    tl.to("#chartStage", { opacity: 1, duration: 0.8, ease: "power2.out" }, 1.5);
     
-    // DRAW FLAT CHART LINE (2.5s - 5.5s)
-    tl.to("#stockLine", { strokeDashoffset: 1020, duration: 3.0, ease: "none" }, 2.5);
+    // DRAW FLAT CHART LINE (1.5s - 4.5s)
+    tl.to("#stockLine", { strokeDashoffset: 1020, duration: 3.0, ease: "none" }, 1.5);
     
-    // THE CRASH (5.5s)
-    tl.to("#stockLine", { stroke: "#ff3366", filter: "drop-shadow(0 0 16px rgba(255,51,102,0.95))", duration: 0.1 }, 5.5);
-    tl.to("#stockLine", { strokeDashoffset: 200, duration: 0.9, ease: "power4.in" }, 5.5);
+    // THE CRASH (4.5s)
+    tl.to("#stockLine", { stroke: "#ff3366", filter: "drop-shadow(0 0 16px rgba(255,51,102,0.95))", duration: 0.1 }, 4.5);
+    tl.to("#stockLine", { strokeDashoffset: 200, duration: 0.9, ease: "power4.in" }, 4.5);
     
-    // SCREEN FLASHES RED & LOSS COUNTER STARTS (5.5s)
-    tl.to("#chartFlash", { opacity: 1, duration: 0.1 }, 5.5);
-    tl.to("#chartFlash", { opacity: 0, duration: 0.8, ease: "power2.out" }, 5.6);
-    tl.to("#lossLabel", { opacity: 1, duration: 0.2 }, 5.5);
+    // SCREEN FLASHES RED & LOSS COUNTER STARTS (4.5s)
+    tl.to("#chartFlash", { opacity: 1, duration: 0.1 }, 4.5);
+    tl.to("#chartFlash", { opacity: 0, duration: 0.8, ease: "power2.out" }, 4.6);
+    tl.to("#lossLabel", { opacity: 1, duration: 0.2 }, 4.5);
     
     const lossObj = { val: 0 };
     tl.to(lossObj, {
@@ -162,7 +150,7 @@
       onUpdate: function() {
         document.getElementById("lossValue").innerText = "-¥" + Math.floor(lossObj.val).toLocaleString("en-US");
       }
-    }, 5.5);
+    }, 4.5);
 
     tl.to({}, { duration: 3.0 }, 12.0); // Pads out to 15s total
 
