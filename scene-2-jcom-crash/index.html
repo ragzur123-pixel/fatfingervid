@@ -80,7 +80,7 @@
               <div data-hf-id="hf-bfjc" class="crt-glass-glare"></div>
               <div data-hf-id="hf-hh4q" class="crt-scanlines"></div>
               <section data-hf-id="hf-s2og" id="order-clip" class="clip" data-start="0" data-duration="15" data-track-index="1" data-media-start="0">
-                <div class="terminal-wipe" id="terminalWipe"><span id="termText"></span><span class="term-caret"></span></div>
+                <div data-hf-id="hf-mvx3" class="terminal-wipe" id="terminalWipe"><span data-hf-id="hf-z2j9" id="termText"></span><span data-hf-id="hf-adct" class="term-caret"></span></div>
                 <div data-hf-id="hf-2x4z" class="minimal-stage" id="minimalStage">
                   <div data-hf-id="hf-2bh9" class="counters-group" id="countersGroup">
                     <div data-hf-id="hf-168v" class="counter-box" id="boxQty" style="border-color: #ff3366; background-color: #1f080e; box-shadow: 0 0 35px rgba(255,51,102,0.65), 0 20px 48px rgba(0,0,0,0.95);"><span data-hf-id="hf-3zkv" class="counter-label">QUANTITY</span><div data-hf-id="hf-89rs" class="counter-value-wrapper" id="wrapQty"><span data-hf-id="hf-vki5" id="valQty">610,000</span></div></div>
@@ -90,21 +90,21 @@
                 </div>
                 <div data-hf-id="hf-qj51" class="click-ripple" id="clickRipple"></div>
                 <div data-hf-id="hf-8lu0" id="mouseCursor"><svg data-hf-id="hf-xlqh" width="44" height="52" viewBox="0 0 32 38" fill="none"><path data-hf-id="hf-uu4v" d="M0 0 L0 32 L8 24 L14 36 L19 33 L13 22 L23 22 Z" fill="#ffffff" stroke="#000000" stroke-width="2.2" stroke-linejoin="miter" /></svg></div>
-                <div class="chart-stage" id="chartStage">
-                  <div class="chart-header">J-COM CO. [9420]</div>
-                  <div class="chart-container">
-                    <div class="chart-grid"></div>
-                    <svg class="chart-svg" viewBox="0 0 800 340">
+                <div data-hf-id="hf-skeh" class="chart-stage" id="chartStage">
+                  <div data-hf-id="hf-vcuh" class="chart-header">J-COM CO. [9420]</div>
+                  <div data-hf-id="hf-ig1q" class="chart-container">
+                    <div data-hf-id="hf-82m1" class="chart-grid"></div>
+                    <svg data-hf-id="hf-ndow" class="chart-svg" viewBox="0 0 800 340">
                       <!-- Flat for ~560px, then drops ~600px vertically -->
-                      <path class="stock-line" id="stockLine" d="M -20,60 L 540,60 L 560,60 L 575,400 L 590,800" stroke-dasharray="1600" stroke-dashoffset="1600"></path>
+                      <path data-hf-id="hf-j7ov" class="stock-line" id="stockLine" d="M -20,60 L 540,60 L 560,60 L 575,400 L 590,800" stroke-dasharray="1600" stroke-dashoffset="1600" />
                     </svg>
                   </div>
-                  <div class="loss-counter-wrapper">
-                    <div class="loss-counter-label" id="lossLabel">UNREALIZED LOSS</div>
-                    <div class="loss-counter-value" id="lossValue"></div>
+                  <div data-hf-id="hf-o00g" class="loss-counter-wrapper">
+                    <div data-hf-id="hf-cbbe" class="loss-counter-label" id="lossLabel">UNREALIZED LOSS</div>
+                    <div data-hf-id="hf-jzg4" class="loss-counter-value" id="lossValue"></div>
                   </div>
                 </div>
-                <div class="chart-red-flash" id="chartFlash"></div>
+                <div data-hf-id="hf-r517" class="chart-red-flash" id="chartFlash"></div>
               </section>
             </div>
             <div data-hf-id="hf-0y0y" class="mac-expanded-chin"><div data-hf-id="hf-tk83" class="mac-centered-apple-badge"><svg data-hf-id="hf-64d5" class="official-silver-apple-icon" viewBox="0 0 384 512"><path data-hf-id="hf-lzp9" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" /></svg></div></div>
@@ -127,14 +127,17 @@
     gsap.set(".vhs-timestamp", { x: 0, y: 0, scale: 1, innerText: "REC ● DEC 08 2005 - 09:27:04 JST" });
     gsap.set("#mouseCursor", { x: 490, y: 520, opacity: 1 });
 
-    // TERMINAL WIPE SEQUENCE (0.5s - 2.0s)
+    // BLACKOUT INITIAL SCENE (0.5s)
+    tl.to("#minimalStage, #mouseCursor", { opacity: 0, duration: 0 }, 0.5);
+
+    // TERMINAL COMMAND SEQUENCE (0.5s - 1.8s)
     tl.set("#terminalWipe", { display: "block" }, 0.5);
     const cmd = "> CLEAR";
     for (let i = 1; i <= cmd.length; i++) {
       tl.set("#termText", { innerText: cmd.substring(0, i) }, 0.5 + (i * 0.15));
     }
-    // Hard wipe exactly on execution
-    tl.to("#minimalStage, #mouseCursor, #terminalWipe", { opacity: 0, duration: 0 }, 1.8);
+    // Terminal hides itself after execution
+    tl.to("#terminalWipe", { opacity: 0, duration: 0 }, 1.8);
     
     // FADE IN CHART SCENE (2.5s)
     tl.to("#chartStage", { opacity: 1, duration: 0.8, ease: "power2.out" }, 2.5);
