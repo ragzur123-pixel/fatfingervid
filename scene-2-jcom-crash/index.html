@@ -130,7 +130,7 @@
       let trend = (160 - currentY) * 0.02;
       if (x > -350 && x < -100) trend -= 15; // aggressive jagged climb
       if (x > -100) trend = (160 - currentY) * 0.15; // pull to 160 at the end
-      currentY += trend + (Math.random() - 0.5) * 120; // high volatility
+      currentY += trend + (Math.sin(x * 0.73) * Math.cos(x * 0.29)) * 120; // deterministic volatility
       pathD += `L ${x} ${currentY.toFixed(1)} `;
     }
     pathD += "L 0 160"; // Connect perfectly to the start of the noise line
