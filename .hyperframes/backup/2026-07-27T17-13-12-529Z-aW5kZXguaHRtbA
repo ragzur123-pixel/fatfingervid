@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>15s Macintosh CRT Stock Order Swap Visual - HyperFrames</title>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+    @font-face { font-family: 'Courier New'; src: local('Courier New'); }
+    @font-face { font-family: 'Lucida Console'; src: local('Lucida Console'); }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { margin: 0; background: #000; color: #fff; font-family: 'Courier New', 'Lucida Console', monospace; overflow: hidden; -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
+    #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; user-select: none; transform: translateZ(0); }
+    #bg { position: absolute; inset: 0; background: #000; display: flex; align-items: center; justify-content: center; perspective: 1400px; }
+    .mac-3d-ground-layer { position: absolute; width: 3200px; height: 2000px; bottom: -320px; background: radial-gradient(ellipse at 50% 35%, #1e293b 0%, #0f172a 38%, #020617 65%, #000000 90%); transform: rotateX(76deg); transform-origin: bottom center; -webkit-mask-image: radial-gradient(ellipse at 50% 40%, rgba(0,0,0,1) 30%, rgba(0,0,0,0.7) 55%, transparent 80%); mask-image: radial-gradient(ellipse at 50% 40%, rgba(0,0,0,1) 30%, rgba(0,0,0,0.7) 55%, transparent 80%); z-index: 1; pointer-events: none; }
+    .mac-ground-shadow { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 900px; height: 350px; background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.05) 50%, transparent 80%); filter: blur(12px); pointer-events: none; }
+    .mac-3d-stage { position: relative; width: 1920px; height: 1080px; display: flex; align-items: center; justify-content: center; transform-style: preserve-3d; transform-origin: center center; z-index: 10; will-change: transform; }
+    .mac-studio-wrapper { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; transform-style: preserve-3d; z-index: 10; }
+    .mac-square-chassis { position: relative; width: 1160px; height: 980px; background: linear-gradient(180deg, #007a87 0%, #005a66 48%, #e2e8f0 76%, #cbd5e1 100%); border: 14px solid rgba(255, 255, 255, 0.45); border-radius: 56px 56px 24px 24px; box-shadow: 0 40px 100px rgba(0,0,0,0.95), inset 0 6px 18px rgba(255,255,255,0.8), inset 0 -14px 32px rgba(0,0,0,0.55); display: flex; flex-direction: column; align-items: center; padding: 24px 32px 18px; overflow: hidden; transform-style: preserve-3d; z-index: 10; }
+    .mac-base-foot { position: relative; width: 960px; height: 36px; background: linear-gradient(180deg, #94a3b8 0%, #475569 50%, #1e293b 100%); border: 2px solid #cbd5e1; border-radius: 0 0 20px 20px; box-shadow: 0 12px 24px rgba(0,0,0,0.9), inset 0 2px 4px rgba(255,255,255,0.6); margin-top: -4px; z-index: 12; }
+    .mac-ao-line { position: relative; width: 980px; height: 10px; background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 100%); margin-top: -4px; filter: blur(3px); z-index: 13; }
+    .imac-handle { position: absolute; top: 10px; width: 220px; height: 20px; background: rgba(255,255,255,0.35); border-radius: 10px; border: 2px solid rgba(255,255,255,0.65); }
+    .mac-crt-tube { position: relative; width: 100%; height: 760px; background: #000; border: 36px solid #0b1220; border-radius: 96px; box-shadow: inset 0 0 140px rgba(0,0,0,0.99), 0 0 45px rgba(0,0,0,0.95); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .mac-expanded-chin { position: relative; width: 100%; height: 110px; display: flex; align-items: center; justify-content: center; margin-top: 12px; }
+    .mac-centered-apple-badge { display: flex; align-items: center; justify-content: center; }
+    .official-silver-apple-icon { width: 60px; height: 72px; fill: url(#silverGradient); filter: drop-shadow(0 3px 8px rgba(0,0,0,0.65)); }
+    .crt-glass-glare { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.04) 28%, transparent 50%, rgba(255,255,255,0.02) 72%, rgba(255,255,255,0.08) 100%); z-index: 42; pointer-events: none; }
+    .crt-scanlines { position: absolute; inset: 0; background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%); background-size: 100% 2px; z-index: 40; opacity: 0.25; pointer-events: none; }
+    .vhs-timestamp { position: absolute; bottom: 28px; left: 36px; font-family: 'Courier New', 'Lucida Console', monospace; font-size: 24px; font-weight: 700; color: #00ff66; text-shadow: 0 0 8px rgba(0,255,102,0.75), 2px 2px #000; z-index: 60; letter-spacing: 2px; pointer-events: none; }
+    .clip { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 10; }
+    .minimal-stage { position: relative; width: 980px; display: flex; flex-direction: column; align-items: center; gap: 32px; transform-origin: center center; }
+    .counters-group { position: relative; width: 100%; display: flex; flex-direction: column; gap: 24px; perspective: 1200px; }
+    
+    /* COUNTER FIELD CONTAINER BOX */
+    .counter-box { position: relative; background: #080d14; border: 2.5px solid rgba(255, 255, 255, 0.2); border-radius: 12px; padding: 22px 32px; display: flex; align-items: center; justify-content: space-between; height: 150px; box-shadow: 0 20px 48px rgba(0,0,0,0.95); transform-style: preserve-3d; transition: border-color 0.3s, background-color 0.3s; }
+    .counter-box.error-glow { border-color: #ff3366; background: #1f080e; box-shadow: 0 0 35px rgba(255,51,102,0.65); }
+    .counter-label { font-family: 'Courier New', 'Lucida Console', monospace; font-size: 26px; font-weight: 700; color: #94a3b8; letter-spacing: 3px; text-transform: uppercase; text-shadow: 0 0 6px rgba(148,163,184,0.45); }
+    
+    /* VALUE WRAPPER - CLEAN UNBOXED TEXT CONTAINER */
+    .counter-value-wrapper { position: relative; display: flex; align-items: center; gap: 8px; }
+
+    /* TEXT VALUES - BLUE FOR QTY 1 & GREEN FOR PRICE 610,000¥ BEFORE SWAP; RED FOR BOTH AFTER SWAP */
+    #valQty { font-family: 'Courier New', 'Lucida Console', monospace; font-size: 96px; font-weight: 700; color: #3b82f6; letter-spacing: -1.5px; display: inline-block; opacity: 1; text-shadow: 0 0 12px rgba(59,130,246,0.85), 0 0 24px rgba(59,130,246,0.4); transform-origin: center center; transition: color 0.3s; }
+    #valPrice { font-family: 'Courier New', 'Lucida Console', monospace; font-size: 96px; font-weight: 700; color: #00e676; letter-spacing: -1.5px; display: inline-block; opacity: 1; text-shadow: 0 0 12px rgba(0,230,118,0.85), 0 0 24px rgba(0,230,118,0.4); transform-origin: center center; transition: color 0.3s; }
+    .typing-caret-l { display: inline-block; width: 6px; height: 82px; background: #ffffff; opacity: 0; border-radius: 1px; box-shadow: 0 0 0 1.5px #000000, 0 0 10px #ffffff; }
+    
+    /* CONFIRM ORDER BUTTON */
+    .confirm-container { position: relative; width: 680px; margin: 0 auto; }
+    .retro-confirm-btn { width: 100%; height: 80px; background: linear-gradient(180deg, #32d74b 0%, #1db937 100%); border: 3.5px outset #ffffff; border-right-color: #0d5c1a; border-bottom-color: #0d5c1a; border-radius: 8px; color: #ffffff; font-family: 'Courier New', 'Lucida Console', monospace; font-size: 28px; font-weight: 700; letter-spacing: 3px; text-shadow: 2px 2px 2px #000000; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; box-shadow: 0 12px 28px rgba(0,0,0,0.7), 0 0 16px rgba(50,215,75,0.45); transition: border-color 0.15s; }
+    .retro-confirm-btn.clicked { border: 3.5px inset #0d5c1a; background: linear-gradient(180deg, #1db937 0%, #17a02e 100%); }
+    #mouseCursor { position: absolute; top: 0; left: 0; width: 44px; height: 52px; z-index: 35; pointer-events: none; filter: drop-shadow(2px 3px 6px rgba(0,0,0,0.9)); }
+    .click-ripple { position: absolute; width: 56px; height: 56px; border: 4px solid #00ff44; border-radius: 50%; z-index: 34; transform: translate(-50%, -50%) scale(0.2); opacity: 0; }
+  </style>
+</head>
+<body>
+  <svg data-hf-id="hf-qfii" width="0" height="0" style="position:absolute;"><defs data-hf-id="hf-mh0t"><lineargradient data-hf-id="hf-x8r2" id="silverGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop data-hf-id="hf-7b67" offset="0%" stop-color="#ffffff" /><stop data-hf-id="hf-oqaw" offset="25%" stop-color="#e2e8f0" /><stop data-hf-id="hf-5jtt" offset="48%" stop-color="#475569" /><stop data-hf-id="hf-v9c4" offset="68%" stop-color="#94a3b8" /><stop data-hf-id="hf-a2d3" offset="88%" stop-color="#e2e8f0" /><stop data-hf-id="hf-bwui" offset="100%" stop-color="#ffffff" /></lineargradient></defs></svg>
+  <div data-hf-id="hf-goxw" id="root" data-composition-id="stock-order-swap" data-start="0" data-width="1920" data-height="1080" data-duration="15">
+    <div data-hf-id="hf-2xc0" id="bg">
+      <div data-hf-id="hf-3mm5" class="mac-3d-ground-layer"><div data-hf-id="hf-k7ik" class="mac-ground-shadow"></div></div>
+      <div data-hf-id="hf-hewe" class="mac-3d-stage" id="mac3DStage">
+        <div data-hf-id="hf-rgfm" class="mac-studio-wrapper">
+          <div data-hf-id="hf-rkgo" class="mac-square-chassis">
+            <div data-hf-id="hf-ap45" class="imac-handle"></div>
+            <div data-hf-id="hf-0jnq" class="mac-crt-tube">
+              <div data-hf-id="hf-bfjc" class="crt-glass-glare"></div>
+              <div data-hf-id="hf-hh4q" class="crt-scanlines"></div>
+              <div data-hf-id="hf-rzm6" class="vhs-timestamp">REC ● DEC 08 2005 - 09:27:04 JST</div>
+              <section data-hf-id="hf-s2og" id="order-clip" class="clip" data-start="0" data-duration="15" data-track-index="1">
+                <div data-hf-id="hf-2x4z" class="minimal-stage" id="minimalStage">
+                  <div data-hf-id="hf-2bh9" class="counters-group" id="countersGroup">
+                    <div data-hf-id="hf-168v" class="counter-box" id="boxQty"><span data-hf-id="hf-3zkv" class="counter-label">QUANTITY</span><div data-hf-id="hf-89rs" class="counter-value-wrapper" id="wrapQty"><span data-hf-id="hf-vki5" id="valQty"></span><span data-hf-id="hf-z4h8" class="typing-caret-l" id="caretQty"></span></div></div>
+                    <div data-hf-id="hf-w3cc" class="counter-box" id="boxPrice"><span data-hf-id="hf-g3ko" class="counter-label">LIMIT PRICE</span><div data-hf-id="hf-zoz7" class="counter-value-wrapper" id="wrapPrice"><span data-hf-id="hf-6ymq" id="valPrice"></span><span data-hf-id="hf-u607" class="typing-caret-l" id="caretPrice"></span></div></div>
+                  </div>
+                  <div data-hf-id="hf-bzpd" class="confirm-container" id="confirmContainer"><button data-hf-id="hf-n823" class="retro-confirm-btn" id="btnConfirm">✔ CONFIRM ORDER</button></div>
+                </div>
+                <div data-hf-id="hf-qj51" class="click-ripple" id="clickRipple"></div>
+                <div data-hf-id="hf-8lu0" id="mouseCursor"><svg data-hf-id="hf-xlqh" width="44" height="52" viewBox="0 0 32 38" fill="none"><path data-hf-id="hf-uu4v" d="M0 0 L0 32 L8 24 L14 36 L19 33 L13 22 L23 22 Z" fill="#ffffff" stroke="#000000" stroke-width="2.2" stroke-linejoin="miter" /></svg></div>
+              </section>
+            </div>
+            <div data-hf-id="hf-0y0y" class="mac-expanded-chin"><div data-hf-id="hf-tk83" class="mac-centered-apple-badge"><svg data-hf-id="hf-64d5" class="official-silver-apple-icon" viewBox="0 0 384 512"><path data-hf-id="hf-lzp9" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" /></svg></div></div>
+          </div>
+          <div data-hf-id="hf-nqru" class="mac-base-foot"></div>
+          <div data-hf-id="hf-m8al" class="mac-ao-line"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    tl.set("#valPrice", { x: 0, y: 0, data: "hf-hold" }, 0);
+    const mac3DStage = "#mac3DStage", boxQty = "#boxQty", boxPrice = "#boxPrice";
+    const valQty = document.getElementById("valQty"), valPrice = document.getElementById("valPrice");
+    const caretQty = "#caretQty", caretPrice = "#caretPrice", mouseCursor = "#mouseCursor", clickRipple = "#clickRipple";
+    const btnConfirm = document.getElementById("btnConfirm");
+
+    gsap.set(mac3DStage, { scale: 0.68, rotateX: 9, rotateY: 0, y: -35, opacity: 1 });
+    gsap.set([caretQty, caretPrice], { opacity: 0 });
+    gsap.set(mouseCursor, { x: 620, y: 280, opacity: 0 });
+    gsap.set(clickRipple, { opacity: 0 });
+    gsap.set(valQty, { opacity: 1, y: 0, scale: 1, color: "#3b82f6" });
+    gsap.set(valPrice, { opacity: 1, y: 0, scale: 1, color: "#00e676" });
+
+    function triggerClick(x, y, color = "#00ff44") {
+      gsap.set(clickRipple, { x, y, borderColor: color, opacity: 1, scale: 0.2 });
+      gsap.to(clickRipple, { scale: 1.4, opacity: 0, duration: 0.35, ease: "power2.out" });
+    }
+
+    tl.to(mouseCursor, { opacity: 1, duration: 0.4 }, 0.4);
+    tl.to(mouseCursor, { x: 680, y: 180, duration: 0.7, ease: "power2.inOut" }, 0.8);
+    tl.add(() => triggerClick(680, 180), 1.5);
+    tl.to(caretQty, { opacity: 1, duration: 0.1 }, 1.5);
+
+    // TYPING INTENDED NORMAL ORDER BEFORE SWAP: QUANTITY = 1 (BLUE #3b82f6)
+    ["", "1"].forEach((txt, i) => { tl.add(() => { valQty.textContent = txt; }, 1.6 + (i * 0.2)); });
+
+    tl.to(caretQty, { opacity: 0, duration: 0.1 }, 2.3);
+    tl.to(mouseCursor, { x: 680, y: 360, duration: 0.6, ease: "power2.inOut" }, 2.3);
+    tl.add(() => triggerClick(680, 360), 2.9);
+    tl.to(caretPrice, { opacity: 1, duration: 0.1 }, 2.9);
+
+    // TYPING INTENDED NORMAL ORDER BEFORE SWAP: LIMIT PRICE = 610,000¥ (GREEN #00e676)
+    ["", "6", "61", "610", "610,", "610,0", "610,00", "610,000", "610,000¥"].forEach((txt, i) => { tl.add(() => { valPrice.textContent = txt; }, 3.0 + (i * 0.1)); });
+
+    tl.to(caretPrice, { opacity: 0, duration: 0.1 }, 4.0);
+    tl.to(mac3DStage, { scale: 1.05, rotateX: 0, rotateY: 0, y: -40, duration: 1.2, ease: "power2.inOut" }, 4.0);
+    tl.to(mouseCursor, { x: 560, y: 340, duration: 1.2, ease: "power2.out" }, 4.2);
+    tl.to(mouseCursor, { x: 520, y: 320, duration: 1.2, ease: "sine.inOut" }, 5.4);
+    tl.to(mouseCursor, { x: 540, y: 335, duration: 1.2, ease: "sine.inOut" }, 6.6);
+
+    // CLEAN CINEMATIC VALUE CROSSOVER SWAP (8.8s - 9.6s)
+    tl.to(valQty, { y: 170, scale: 0.4, opacity: 0, duration: 0.79, ease: "power2.inOut" }, 8.8);
+    tl.to(valPrice, { y: -170, scale: 0.4, opacity: 0, duration: 0.79, ease: "power2.inOut" }, 8.8);
+
+    // Commit Swapped Values (9.61s) - BOTH TEXT VALUES TURN CATASTROPHIC RED (#ff3366) AFTER SWAP!
+    tl.add(() => {
+      valQty.textContent = "610,000";
+      valPrice.textContent = "1¥";
+      valQty.style.color = "#ff3366";
+      valPrice.style.color = "#ff3366";
+      gsap.set(valQty, { y: -50, scale: 1.25, opacity: 0 });
+      gsap.set(valPrice, { y: 50, scale: 1.25, opacity: 0 });
+    }, 9.61);
+
+    // Entrance of Swapped Values (9.65s - 10.4s)
+    tl.to(valQty, { y: 0, scale: 1, opacity: 1, duration: 0.75, ease: "sine.out" }, 9.65);
+    tl.to(valPrice, { y: 0, scale: 1, opacity: 1, duration: 0.75, ease: "sine.out" }, 9.65);
+
+    // CONSTANT RED ERROR GLOW EFFECT ON BOTH TEXTBOXES & RED TEXT GLOW AFTER SWAP (10.0s - 15.0s STAY ON TILL END!)
+    tl.to([boxQty, boxPrice], { className: "counter-box error-glow", duration: 0.4, ease: "power2.inOut" }, 10.0);
+    tl.to([valQty, valPrice], { textShadow: "0 0 20px rgba(255, 51, 102, 0.95), 0 0 40px rgba(255, 51, 102, 0.5)", duration: 0.4, ease: "power2.out" }, 10.0);
+
+    tl.to(mac3DStage, { scale: 0.68, rotateX: 9, rotateY: 0, y: -35, duration: 0.9, ease: "power2.inOut" }, 12.0);
+    tl.to(mouseCursor, { x: 490, y: 520, duration: 0.9, ease: "power2.inOut" }, 12.1);
+    tl.add(() => triggerClick(490, 520, "#00ff44"), 13.0);
+    tl.to(btnConfirm, { className: "retro-confirm-btn clicked", duration: 0.12, yoyo: true, repeat: 1 }, 13.0);
+    tl.to({}, { duration: 2.0 }, 13.0);
+
+    tl.to("#valPrice", { keyframes: { "0%": { x: 0, y: 0 }, "10.6%": { x: -11.34, y: -0.777 }, "11%": { x: -29.224, y: -3.281 }, "11.4%": { x: -60.911, y: -8.763 }, "11.8%": { x: -109.486, y: -18.821 }, "12.5%": { x: -168.322, y: -32.546, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "12.7%": { x: -234.125, y: -49.314 }, "13.3%": { x: -303.248, y: -67.881, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "13.5%": { x: -382.719, y: -90.402 }, "13.9%": { x: -475.774, y: -118.092 }, "14.1%": { x: -591.947, y: -153.886 }, "15.6%": { x: -721.503, y: -194.692 }, "15.8%": { x: -842.928, y: -233.676 }, "16.2%": { x: -942.817, y: -266.5 }, "16.8%": { x: -1023.084, y: -293.475 }, "17.1%": { x: -1081.715, y: -313.745 }, "17.2%": { x: -1129.489, y: -330.707 }, "17.9%": { x: -1171.047, y: -346.087, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "18.5%": { x: -1206.713, y: -359.84 }, "18.7%": { x: -1234.109, y: -370.984 }, "19.8%": { x: -1251.388, y: -378.997, ease: "custom(M0,0 C0.333,0 0.667,0.667 1,1)" }, "20%": { x: -1258.279, y: -383.762 }, "21.4%": { x: -1256.154, y: -385.86, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "22.5%": { x: -1246.285, y: -385.894, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "22.6%": { x: -1230.83, y: -384.141 }, "23.1%": { x: -1211.095, y: -380.685, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "23.5%": { x: -1188.422, y: -375.742 }, "23.6%": { x: -1163.43, y: -369.461 }, "24.5%": { x: -1137.589, y: -362.528, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "24.9%": { x: -1115.229, y: -356.293 }, "25.9%": { x: -1098.978, y: -351.414, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "28.4%": { x: -1087.284, y: -347.345, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "28.7%": { x: -1076.423, y: -342.911 }, "29.9%": { x: -1061.553, y: -336.732, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "30.1%": { x: -1042.143, y: -328.746 }, "30.5%": { x: -1016.577, y: -317.983 }, "31.3%": { x: -986.479, y: -304.979, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "31.5%": { x: -952.091, y: -289.908 }, "32.8%": { x: -915.249, y: -273.761 }, "33%": { x: -877.19, y: -257.301 }, "34.4%": { x: -841.054, y: -241.914, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "34.6%": { x: -807.138, y: -227.468 }, "35.9%": { x: -777.034, y: -214.271 }, "36.1%": { x: -747.578, y: -200.316 }, "37.3%": { x: -717.921, y: -184.875, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "37.7%": { x: -685.646, y: -166.858 }, "39.2%": { x: -652.617, y: -147.528 }, "40.6%": { x: -620.701, y: -128.25, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "42.5%": { x: -594.07, y: -111.595 }, "42.7%": { x: -572.388, y: -97.681 }, "43.8%": { x: -552.775, y: -85.489 }, "44%": { x: -531.88, y: -73.84 }, "44.2%": { x: -505.049, y: -60.858 }, "45.4%": { x: -472.219, y: -46.492, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "45.6%": { x: -438.524, y: -33.247 }, "46.5%": { x: -406.292, y: -22.349, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "46.9%": { x: -377.054, y: -14.088 }, "47.1%": { x: -348.185, y: -7.409 }, "48.3%": { x: -316.583, y: -0.827, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "48.7%": { x: -284.686, y: 5.117 }, "50%": { x: -255.54, y: 9.835 }, "50.2%": { x: -231.981, y: 12.855 }, "50.4%": { x: -211.827, y: 14.4 }, "51.2%": { x: -190.296, y: 15.271, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "51.8%": { x: -166.367, y: 15.704, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "53.3%": { x: -141.957, y: 15.853 }, "53.5%": { x: -120.652, y: 15.704 }, "54.3%": { x: -102.852, y: 15.014, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "54.7%": { x: -86.56, y: 13.621 }, "55%": { x: -70.214, y: 11.337 }, "56.4%": { x: -52.727, y: 8.196, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "57.6%": { x: -37.058, y: 4.635, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "60.8%": { x: -25.05, y: 1.094, ease: "custom(M0,0 C0.333,0.333 0.667,1 1,1)" }, "62.4%": { x: -16.048, y: -1.747, ease: "custom(M0,0 C0.333,0 0.667,0.667 1,1)" }, "62.6%": { x: -9.142, y: -3.115 }, "65.3%": { x: -3.302, y: -3.031, ease: "custom(M0,0 C0.333,0 0.667,1 1,1)" }, "67%": { x: 1.676, y: -2.14 }, "100%": { x: 9, y: 0 }, easeEach: "none" }, duration: 3.35 }, 4.933);
+
+    window.__timelines["stock-order-swap"] = tl;
+  </script>
+</body>
+</html>

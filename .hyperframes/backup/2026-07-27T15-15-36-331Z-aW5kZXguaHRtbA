@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080">
+  <title>15s Pure White All-CRT Overlay Macintosh Swap Visual - HyperFrames</title>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+    @font-face {
+      font-family: 'Courier New';
+      src: local('Courier New');
+    }
+    @font-face {
+      font-family: 'Lucida Console';
+      src: local('Lucida Console');
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      background: #000000;
+      color: #ffffff;
+      font-family: 'Courier New', 'Lucida Console', monospace;
+      overflow: hidden;
+      -webkit-font-smoothing: none;
+    }
+
+    /* HyperFrames Standalone Composition Root (15-Second Duration) */
+    #root {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Pure Pitch-Black Background (Full Bleed Child) */
+    #bg {
+      position: absolute;
+      inset: 0;
+      background: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1400px;
+    }
+
+    /* INFINITE 3D GROUND PLANE LAYER WITH RADIAL MASK FADE */
+    .mac-3d-ground-layer {
+      position: absolute;
+      width: 3200px;
+      height: 2000px;
+      bottom: -320px;
+      background: radial-gradient(
+        ellipse at 50% 35%, 
+        #1e293b 0%, 
+        #0f172a 38%, 
+        #020617 65%, 
+        #000000 90%
+      );
+      transform: rotateX(76deg);
+      transform-origin: bottom center;
+      -webkit-mask-image: radial-gradient(ellipse at 50% 40%, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0.7) 55%, transparent 80%);
+      mask-image: radial-gradient(ellipse at 50% 40%, rgba(0, 0, 0, 1) 30%, rgba(0, 0, 0, 0.7) 55%, transparent 80%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Soft Radial Ambient Ground Shadow Falloff */
+    .mac-ground-shadow {
+      position: absolute;
+      top: 35%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 1400px;
+      height: 700px;
+      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.99) 0%, rgba(0, 0, 0, 0.75) 45%, transparent 80%);
+      pointer-events: none;
+    }
+
+    /* 3D Perspective Stage Container (8° Tilt Camera Rig) */
+    .mac-3d-stage {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform-style: preserve-3d;
+      transform-origin: center center;
+      z-index: 10;
+    }
+
+    /* 3D MACINTOSH COMPUTER SETUP ATOP 3D GROUND */
+    .mac-studio-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transform-style: preserve-3d;
+      z-index: 10;
+    }
+
+    /* HIGH-DEFINITION SQUARE ALL-IN-ONE MACINTOSH COMPUTER CHASSIS */
+    .mac-square-chassis {
+      position: relative;
+      width: 1160px;
+      height: 980px;
+      background: linear-gradient(180deg, #007a87 0%, #005a66 48%, #e2e8f0 76%, #cbd5e1 100%);
+      border: 14px solid rgba(255, 255, 255, 0.45);
+      border-radius: 56px 56px 24px 24px;
+      box-shadow: 
+        0 40px 100px rgba(0, 0, 0, 0.95),
+        inset 0 6px 18px rgba(255, 255, 255, 0.8),
+        inset 0 -14px 32px rgba(0, 0, 0, 0.55);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 32px 18px;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      z-index: 10;
+    }
+
+    /* PHYSICAL 3D MACINTOSH BASE STAND FOOT RESTING ON GROUND */
+    .mac-base-foot {
+      position: relative;
+      width: 960px;
+      height: 36px;
+      background: linear-gradient(180deg, #94a3b8 0%, #475569 50%, #1e293b 100%);
+      border: 2px solid #cbd5e1;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 
+        0 12px 24px rgba(0, 0, 0, 0.9),
+        inset 0 2px 4px rgba(255, 255, 255, 0.6);
+      margin-top: -4px;
+      z-index: 12;
+    }
+
+    /* HIGH-DENSITY AMBIENT OCCLUSION COLLISION LINE */
+    .mac-ao-line {
+      position: relative;
+      width: 1020px;
+      height: 14px;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 100%);
+      margin-top: -6px;
+      filter: blur(2px);
+      z-index: 13;
+    }
+
+    /* Top Translucent Handle */
+    .imac-handle {
+      position: absolute;
+      top: 10px;
+      width: 220px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.65);
+    }
+
+    /* HEAVY CURVED CRT SCREEN TUBE (64PX CORNER CURVATURE) */
+    .mac-crt-tube {
+      position: relative;
+      width: 100%;
+      height: 760px;
+      background: #000000;
+      border: 32px solid #0f172a;
+      border-radius: 64px;
+      box-shadow: 
+        inset 0 0 75px rgba(0, 0, 0, 0.95),
+        0 0 35px rgba(0, 0, 0, 0.9);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* EXPANDED BOTTOM CHIN (110PX HEIGHT) */
+    .mac-expanded-chin {
+      position: relative;
+      width: 100%;
+      height: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 12px;
+    }
+
+    /* OFFICIAL 68PX SILVER METALLIC APPLE BADGE */
+    .mac-centered-apple-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .official-silver-apple-icon {
+      width: 60px;
+      height: 72px;
+      fill: url(#silverGradient);
+      filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.65));
+    }
+
+    /* Curved CRT Glass Glare Overlay - TOP Z-INDEX OVER EVERYTHING IN SCREEN */
+    .crt-glass-glare {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg, 
+        rgba(255, 255, 255, 0.12) 0%, 
+        rgba(255, 255, 255, 0.03) 30%, 
+        transparent 55%, 
+        rgba(0, 176, 255, 0.03) 75%, 
+        rgba(255, 255, 255, 0.05) 100%
+      );
+      z-index: 42;
+      pointer-events: none;
+    }
+
+    /* CRT Scanlines Overlay - OVERALL SCANLINES EFFECT OVER CURSOR & CONTENT */
+    .crt-scanlines {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.45) 50%
+      );
+      background-size: 100% 4px;
+      z-index: 40;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    /* VHS 2005 Timestamp Overlay - HIGH VISIBILITY Z-INDEX */
+    .vhs-timestamp {
+      position: absolute;
+      bottom: 28px;
+      left: 36px;
+      font-family: 'Courier New', 'Lucida Console', monospace;
+      font-size: 24px;
+      font-weight: 700;
+      color: #00ff66;
+      text-shadow: 0 0 10px rgba(0, 255, 102, 0.7), 2px 2px #000000;
+      z-index: 60;
+      letter-spacing: 2px;
+      pointer-events: none;
+    }
+
+    /* Main Scene Clip Container */
+    .clip {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    /* Minimalist High-Contrast Order Stage */
+    .minimal-stage {
+      position: relative;
+      width: 980px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      transform-origin: center center;
+    }
+
+    /* Oversized Retro Counter Box Group */
+    .counters-group {
+      position: relative;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      perspective: 1200px;
+    }
+
+    /* Individual Giant Counter Field Box */
+    .counter-box {
+      position: relative;
+      background: #080d14;
+      border: 3.5px inset #7f9db9;
+      border-radius: 10px;
+      padding: 22px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 150px;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.95);
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+      transition: border-color 0.3s, background-color 0.3s;
+    }
+
+    .counter-box.active {
+      border-color: #316ac5;
+      background: #0d1726;
+      box-shadow: 0 0 0 3.5px #316ac5;
+    }
+
+    /* ULTRA-GIANT 26PX LABELS IN RETRO MONOSPACE */
+    .counter-label {
+      font-family: 'Courier New', 'Lucida Console', monospace;
+      font-size: 26px;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow: 0 0 12px rgba(148, 163, 184, 0.5);
+    }
+
+    .counter-value-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* QUANTITY TEXT IS ALWAYS RED (#ff3366) WITH HIGH-DEF PHOSPHOR GLOW */
+    #valQty {
+      font-family: 'Courier New', 'Lucida Console', monospace;
+      font-size: 96px;
+      font-weight: 700;
+      color: #ff3366;
+      letter-spacing: -1.5px;
+      display: inline-block;
+      text-shadow: 
+        0 0 16px rgba(255, 51, 102, 0.8),
+        0 0 32px rgba(255, 51, 102, 0.4);
+    }
+
+    /* PRICE TEXT IS ALWAYS GREEN (#00e676) WITH HIGH-DEF PHOSPHOR GLOW */
+    #valPrice {
+      font-family: 'Courier New', 'Lucida Console', monospace;
+      font-size: 96px;
+      font-weight: 700;
+      color: #00e676;
+      letter-spacing: -1.5px;
+      display: inline-block;
+      text-shadow: 
+        0 0 16px rgba(0, 230, 118, 0.8),
+        0 0 32px rgba(0, 230, 118, 0.4);
+    }
+
+    /* ALL-WHITE CLASSIC MAC OS SERIF I-BEAM TYPING CARET UNDER CRT OVERLAY */
+    .mac-ibeam-caret {
+      display: inline-block;
+      width: 10px;
+      height: 76px;
+      border-top: 4px solid #ffffff;
+      border-bottom: 4px solid #ffffff;
+      border-left: 3.5px solid #ffffff;
+      opacity: 0;
+      box-shadow: 0 0 18px #ffffff, 0 0 30px rgba(255, 255, 255, 0.8);
+    }
+
+    /* Centered Bold Retro Confirm Button */
+    .confirm-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .retro-confirm-btn {
+      width: 100%;
+      height: 80px;
+      background: linear-gradient(180deg, #32d74b 0%, #1db937 100%);
+      border: 3.5px outset #ffffff;
+      border-right-color: #0d5c1a;
+      border-bottom-color: #0d5c1a;
+      border-radius: 8px;
+      color: #ffffff;
+      font-family: 'Courier New', 'Lucida Console', monospace;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-shadow: 2px 2px 2px #000000;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      transition: border-color 0.15s;
+    }
+
+    .retro-confirm-btn.clicked {
+      border: 3.5px inset #0d5c1a;
+      background: linear-gradient(180deg, #1db937 0%, #17a02e 100%);
+    }
+
+    /* ALL-WHITE SYSTEM 7 MOUSE POINTER UNDER CRT SCANLINES & GLARE OVERLAY (Z-INDEX 35) */
+    #mouseCursor {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 44px;
+      height: 52px;
+      z-index: 35;
+      pointer-events: none;
+      filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.9));
+    }
+
+    .click-ripple {
+      position: absolute;
+      width: 56px;
+      height: 56px;
+      border: 4px solid #00ff44;
+      border-radius: 50%;
+      z-index: 34;
+      transform: translate(-50%, -50%) scale(0.2);
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- SVG Official Silver Embossed Metallic Gradient Definition -->
+  <svg data-hf-id="hf-qfii" width="0" height="0" style="position:absolute;">
+    <defs data-hf-id="hf-mh0t">
+      <lineargradient data-hf-id="hf-x8r2" id="silverGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop data-hf-id="hf-7b67" offset="0%" stop-color="#ffffff" />
+        <stop data-hf-id="hf-oqaw" offset="25%" stop-color="#e2e8f0" />
+        <stop data-hf-id="hf-5jtt" offset="48%" stop-color="#475569" />
+        <stop data-hf-id="hf-v9c4" offset="68%" stop-color="#94a3b8" />
+        <stop data-hf-id="hf-a2d3" offset="88%" stop-color="#e2e8f0" />
+        <stop data-hf-id="hf-bwui" offset="100%" stop-color="#ffffff" />
+      </lineargradient>
+    </defs>
+  </svg>
+
+  <!-- HyperFrames Standalone Composition Root (15-Second Duration) -->
+  <div data-hf-id="hf-goxw" id="root" data-composition-id="stock-order-swap" data-start="0" data-width="1920" data-height="1080" data-duration="15">
+    <!-- Background Frame with Independent 3D Ground & 8° Tilt Camera Stage -->
+    <div data-hf-id="hf-2xc0" id="bg">
+      
+      <!-- INFINITE 3D GROUND PLANE LAYER WITH RADIAL MASK FADE -->
+      <div data-hf-id="hf-3mm5" class="mac-3d-ground-layer">
+        <div data-hf-id="hf-k7ik" class="mac-ground-shadow"></div>
+      </div>
+
+      <div data-hf-id="hf-hewe" class="mac-3d-stage" id="mac3DStage">
+        <div data-hf-id="hf-rgfm" class="mac-studio-wrapper">
+          
+          <!-- Square Macintosh Computer Chassis -->
+          <div data-hf-id="hf-rkgo" class="mac-square-chassis">
+            <div data-hf-id="hf-ap45" class="imac-handle"></div>
+
+            <!-- Heavy Curved Apple CRT Glass Tube Screen Container (64px Curvature) -->
+            <div data-hf-id="hf-0jnq" class="mac-crt-tube">
+
+              <!-- CRT Glass Glare & Scanlines OVERLAY EVERYTHING IN SCREEN -->
+              <div data-hf-id="hf-bfjc" class="crt-glass-glare"></div>
+              <div data-hf-id="hf-hh4q" class="crt-scanlines"></div>
+
+              <!-- VHS 2005 Timestamp (High Visibility Z-Index) -->
+              <div data-hf-id="hf-rzm6" class="vhs-timestamp">REC ● DEC 08 2005 - 09:27:04 JST</div>
+
+              <!-- Main Stage Clip -->
+              <section data-hf-id="hf-s2og" id="order-clip" class="clip" data-start="0" data-duration="15" data-track-index="1">
+                
+                <div data-hf-id="hf-2x4z" class="minimal-stage" id="minimalStage">
+                  
+                  <!-- Counters Group -->
+                  <div data-hf-id="hf-2bh9" class="counters-group" id="countersGroup">
+                    
+                    <!-- Quantity Counter Box (Red Text: 1 -> 610,000) -->
+                    <div data-hf-id="hf-168v" class="counter-box" id="boxQty">
+                      <span data-hf-id="hf-3zkv" class="counter-label">QUANTITY</span>
+                      <div data-hf-id="hf-08oa" class="counter-value-wrapper">
+                        <span data-hf-id="hf-vki5" id="valQty"></span>
+                        <span data-hf-id="hf-5886" class="mac-ibeam-caret" id="caretQty"></span>
+                      </div>
+                    </div>
+
+                    <!-- Price Counter Box (Green Text: ¥610,000 -> ¥1) -->
+                    <div data-hf-id="hf-w3cc" class="counter-box" id="boxPrice">
+                      <span data-hf-id="hf-g3ko" class="counter-label">LIMIT PRICE</span>
+                      <div data-hf-id="hf-k0by" class="counter-value-wrapper">
+                        <span data-hf-id="hf-6ymq" id="valPrice"></span>
+                        <span style="text-align: left" data-hf-id="hf-76b5" class="mac-ibeam-caret" id="caretPrice"></span>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <!-- Centered Retro Confirm Button -->
+                  <div data-hf-id="hf-bzpd" class="confirm-container" id="confirmContainer">
+                    <button data-hf-id="hf-n823" class="retro-confirm-btn" id="btnConfirm">
+                      ✔ CONFIRM ORDER
+                    </button>
+                  </div>
+
+                </div>
+
+                <!-- CLICK RIPPLE & ALL-WHITE MOUSE CURSOR UNDER CRT SCANLINES/GLARE (Z-INDEX 35) -->
+                <div data-hf-id="hf-qj51" class="click-ripple" id="clickRipple"></div>
+
+                <div data-hf-id="hf-8lu0" id="mouseCursor">
+                  <svg data-hf-id="hf-xlqh" width="44" height="52" viewBox="0 0 32 38" fill="none">
+                    <path data-hf-id="hf-qxsj" d="M0 0 L0 32 L8 24 L14 36 L19 33 L13 22 L23 22 Z" fill="#ffffff" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="miter" />
+                  </svg>
+                </div>
+
+              </section>
+
+            </div>
+
+            <!-- EXPANDED BOTTOM CHIN WITH OFFICIAL WIKIMEDIA / FONTAWESOME SILVER APPLE BADGE -->
+            <div data-hf-id="hf-0y0y" class="mac-expanded-chin">
+              <div data-hf-id="hf-tk83" class="mac-centered-apple-badge">
+                <svg data-hf-id="hf-64d5" class="official-silver-apple-icon" viewBox="0 0 384 512">
+                  <path data-hf-id="hf-lzp9" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" />
+                </svg>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- PHYSICAL 3D MACINTOSH BASE STAND FOOT & HIGH-DENSITY AO COLLISION LINE -->
+          <div data-hf-id="hf-nqru" class="mac-base-foot"></div>
+          <div data-hf-id="hf-m8al" class="mac-ao-line"></div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- GSAP Animation Master Timeline (15s Total Duration) -->
+  <script>
+    window.__timelines = window.__timelines || {};
+
+    const tl = gsap.timeline({ paused: true });
+
+    // DOM References
+    const mac3DStage = "#mac3DStage";
+    const boxQty = "#boxQty";
+    const boxPrice = "#boxPrice";
+    const valQty = document.getElementById("valQty");
+    const valPrice = document.getElementById("valPrice");
+    const caretQty = "#caretQty";
+    const caretPrice = "#caretPrice";
+    const mouseCursor = "#mouseCursor";
+    const clickRipple = "#clickRipple";
+    const btnConfirm = document.getElementById("btnConfirm");
+
+    // INITIAL SETUP: ALL-WHITE MOUSE POINTER SPAWNS INSIDE CRT SCREEN TUBE AT RELATIVE (620, 280) UNDER CRT SCANLINES/GLARE
+    gsap.set(mac3DStage, { scale: 0.85, rotateX: 8, rotateY: 0, opacity: 1 });
+    gsap.set([caretQty, caretPrice], { opacity: 0 });
+    gsap.set(mouseCursor, { x: 620, y: 280, opacity: 0 });
+    gsap.set(clickRipple, { opacity: 0 });
+
+    function triggerClick(x, y, color = "#00ff44") {
+      gsap.set(clickRipple, { x, y, borderColor: color, opacity: 1, scale: 0.2 });
+      gsap.to(clickRipple, { scale: 1.4, opacity: 0, duration: 0.35, ease: "power2.out" });
+    }
+
+    // 1. Entrance (0.0s - 1.0s) - Mouse Pointer Fades In INSIDE CRT Screen Tube under Scanlines & Glare
+    tl.to(mouseCursor, { opacity: 1, duration: 0.4 }, 0.4);
+
+    // 2. Typing Sequence BEFORE SPIN (1.0s - 4.0s)
+    // Move mouse cursor inside screen tube to Quantity Box ~ (680, 180)
+    tl.to(mouseCursor, { x: 680, y: 180, duration: 0.7, ease: "power2.inOut" }, 0.8);
+    tl.add(() => triggerClick(680, 180), 1.5);
+
+    tl.to(boxQty, { className: "counter-box active", duration: 0.1 }, 1.5);
+    tl.to(caretQty, { opacity: 1, duration: 0.1 }, 1.5);
+
+    // Typing 1 in Quantity (RED TEXT #ff3366)
+    const qtyText = ["", "1"];
+    qtyText.forEach((txt, i) => {
+      tl.add(() => { valQty.textContent = txt; }, 1.6 + (i * 0.2));
+    });
+
+    // Move mouse cursor inside screen tube to Price Box ~ (680, 360)
+    tl.to(boxQty, { className: "counter-box", duration: 0.15 }, 2.3);
+    tl.to(caretQty, { opacity: 0, duration: 0.1 }, 2.3);
+
+    tl.to(mouseCursor, { x: 680, y: 360, duration: 0.6, ease: "power2.inOut" }, 2.3);
+    tl.add(() => triggerClick(680, 360), 2.9);
+
+    tl.to(boxPrice, { className: "counter-box active", duration: 0.1 }, 2.9);
+    tl.to(caretPrice, { opacity: 1, duration: 0.1 }, 2.9);
+
+    // Typing ¥610,000 in Price (GREEN TEXT #00e676)
+    const priceText = ["", "¥", "¥6", "¥61", "¥610", "¥610,", "¥610,0", "¥610,00", "¥610,000"];
+    priceText.forEach((txt, i) => {
+      tl.add(() => { valPrice.textContent = txt; }, 3.0 + (i * 0.1));
+    });
+
+    // 3. CAMERA ZOOMS STRAIGHT INTO THE MACINTOSH CRT SCREEN (4.0s - 8.0s)
+    tl.to(boxPrice, { className: "counter-box", duration: 0.15 }, 4.0);
+    tl.to(caretPrice, { opacity: 0, duration: 0.1 }, 4.0);
+
+    // CAMERA ZOOMS STRAIGHT IN (0.85x -> 1.25x Scale, rotateX: 3deg, rotateY: 0deg)
+    tl.to(mac3DStage, { 
+      scale: 1.25, 
+      rotateX: 3, 
+      rotateY: 0, 
+      y: -25, 
+      duration: 0.9, 
+      ease: "power2.inOut" 
+    }, 4.0);
+
+    // Deep suspense cursor drift inside zoomed CRT screen (4.0s - 8.0s)
+    tl.to(mouseCursor, { x: 560, y: 340, duration: 1.2, ease: "power2.out" }, 4.2);
+    tl.to(mouseCursor, { x: 520, y: 320, duration: 1.2, ease: "sine.inOut" }, 5.4);
+    tl.to(mouseCursor, { x: 540, y: 335, duration: 1.2, ease: "sine.inOut" }, 6.6);
+
+    // 4. SLOWER 4-SECOND 3D REEL FLIP SWAP WITH RECOIL (8.0s - 12.0s)
+    // Phase 1: 3D Flip Out (Reel Spin Top to Bottom) (8.0s - 9.8s)
+    tl.to([boxQty, boxPrice], { rotationX: -90, opacity: 0.3, duration: 1.8, ease: "power2.in" }, 8.0);
+
+    // Commit Swapped Values (Quantity becomes 610,000 in RED #ff3366, Price becomes ¥1 in GREEN #00e676)
+    tl.add(() => {
+      valQty.textContent = "610,000";
+      valPrice.textContent = "¥1";
+    }, 9.8);
+
+    // Phase 2: 3D Flip In with Mechanical Recoil (9.8s - 12.0s)
+    tl.to([boxQty, boxPrice], { rotationX: 0, opacity: 1, duration: 2.2, ease: "back.out(2.0)" }, 9.8);
+
+    // 5. CAMERA ZOOMS BACK OUT TO 8° TILT & MOUSE CURSOR LANDS DIRECTLY ON CONFIRM BUTTON CENTER (12.0s - 15.0s)
+    tl.to(mac3DStage, { 
+      scale: 0.85, 
+      rotateX: 8, 
+      rotateY: 0, 
+      y: 0, 
+      duration: 0.8, 
+      ease: "power2.inOut" 
+    }, 12.0);
+
+    // TARGET CONFIRM BUTTON CENTER EXACTLY INSIDE CRT SCREEN TUBE AT RELATIVE (490, 520)
+    tl.to(mouseCursor, { x: 490, y: 520, duration: 0.9, ease: "power2.inOut" }, 12.1);
+    tl.add(() => triggerClick(490, 520, "#00ff44"), 13.0);
+
+    // Tactile 3D Inset Button Push
+    tl.to(btnConfirm, { className: "retro-confirm-btn clicked", duration: 0.12, yoyo: true, repeat: 1 }, 13.0);
+
+    // Hold frame until 15.0s
+    tl.to({}, { duration: 2.0 }, 13.0);
+
+    // Register Master Timeline
+    window.__timelines["stock-order-swap"] = tl;
+  </script>
+</body>
+</html>
